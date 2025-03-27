@@ -2,55 +2,41 @@ import React, { useState } from "react";
 
 const TodoList = () => {
   const [tasks, setTasks] = useState([]);
-  const [task1, setTask1] = useState("");
-  const [task2, setTask2] = useState("");
-  const [task3, setTask3] = useState("");
+  const [taskInputs, setTaskInputs] = useState(["", "", ""]);
+
+  const handleInputChange = (index, value) => {
+    const newInputs = [...taskInputs];
+    newInputs[index] = value;
+    setTaskInputs(newInputs);
+  };
 
   const addTask = () => {
-    if (task1.trim() !== "" && task2.trim() !== "" && task3.trim() !== "") {
-      setTasks([...tasks, `${task1} : ${task2} : ${task3}`]);
-      setTask1("");
-      setTask2("");
-      setTask3("");
+    if (taskInputs.every(task => task.trim() !== "")) {
+      setTasks([...tasks, taskInputs.join(" : ")]);
+      setTaskInputs(["", "", ""]);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 border rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-4">To-Do List</h2>
-      <div className="flex flex-col gap-2 mb-4">
+    <div style={{ maxWidth: "400px", margin: "20px auto", padding: "10px", border: "1px solid #ccc" }}>
+      <h2>To-Do List</h2>
+      {taskInputs.map((task, index) => (
         <input
+          key={index}
           type="text"
-          value={task1}
-          onChange={(e) => setTask1(e.target.value)}
-          placeholder="Enter first task"
-          className="border p-2 rounded"
+          value={task}
+          onChange={(e) => handleInputChange(index, e.target.value)}
+          placeholder={`Enter task ${index + 1}`}
+          style={{ display: "block", marginBottom: "5px", padding: "5px", width: "100%" }}
         />
-        <input
-          type="text"
-          value={task2}
-          onChange={(e) => setTask2(e.target.value)}
-          placeholder="Enter second task"
-          className="border p-2 rounded"
-        />
-        <input
-          type="text"
-          value={task3}
-          onChange={(e) => setTask3(e.target.value)}
-          placeholder="Enter third task"
-          className="border p-2 rounded"
-        />
-        <button
-          onClick={addTask}
-          className="bg-blue-500 text-white p-2 rounded mt-2"
-        >
-          Add
-        </button>
-      </div>
-      
-      <ul className="list-disc pl-5">
-        {tasks.map((t, index) => (
-          <li key={index} className="mb-1">{t}</li>
+      ))}
+      <button onClick={addTask} style={{ padding: "5px", background: "blue", color: "white", border: "none", cursor: "pointer" }}>
+        Add
+      </button>
+
+      <ul>
+        {tasks.map((task, index) => (
+          <li key={index}>{task}</li>
         ))}
       </ul>
     </div>
